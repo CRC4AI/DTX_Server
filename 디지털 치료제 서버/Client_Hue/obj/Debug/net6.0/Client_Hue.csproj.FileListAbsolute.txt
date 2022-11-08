@@ -1,0 +1,15 @@
+D:\GitHub\Server\2022_0518~\Server_Hue\Client_Hue\bin\Debug\net6.0\Client_Hue.exe
+D:\GitHub\Server\2022_0518~\Server_Hue\Client_Hue\bin\Debug\net6.0\Client_Hue.deps.json
+D:\GitHub\Server\2022_0518~\Server_Hue\Client_Hue\bin\Debug\net6.0\Client_Hue.runtimeconfig.json
+D:\GitHub\Server\2022_0518~\Server_Hue\Client_Hue\bin\Debug\net6.0\Client_Hue.dll
+D:\GitHub\Server\2022_0518~\Server_Hue\Client_Hue\bin\Debug\net6.0\ref\Client_Hue.dll
+D:\GitHub\Server\2022_0518~\Server_Hue\Client_Hue\bin\Debug\net6.0\Client_Hue.pdb
+D:\GitHub\Server\2022_0518~\Server_Hue\Client_Hue\obj\Debug\net6.0\Client_Hue.csproj.AssemblyReference.cache
+D:\GitHub\Server\2022_0518~\Server_Hue\Client_Hue\obj\Debug\net6.0\Client_Hue.GeneratedMSBuildEditorConfig.editorconfig
+D:\GitHub\Server\2022_0518~\Server_Hue\Client_Hue\obj\Debug\net6.0\Client_Hue.AssemblyInfoInputs.cache
+D:\GitHub\Server\2022_0518~\Server_Hue\Client_Hue\obj\Debug\net6.0\Client_Hue.AssemblyInfo.cs
+D:\GitHub\Server\2022_0518~\Server_Hue\Client_Hue\obj\Debug\net6.0\Client_Hue.csproj.CoreCompileInputs.cache
+D:\GitHub\Server\2022_0518~\Server_Hue\Client_Hue\obj\Debug\net6.0\Client_Hue.dll
+D:\GitHub\Server\2022_0518~\Server_Hue\Client_Hue\obj\Debug\net6.0\ref\Client_Hue.dll
+D:\GitHub\Server\2022_0518~\Server_Hue\Client_Hue\obj\Debug\net6.0\Client_Hue.pdb
+D:\GitHub\Server\2022_0518~\Server_Hue\Client_Hue\obj\Debug\net6.0\Client_Hue.genruntimeconfig.cache
