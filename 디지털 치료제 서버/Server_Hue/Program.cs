@@ -12,7 +12,7 @@ namespace Server_Hue
 {
     enum packTypes
     {
-        AI_report = 0, applewatch = 1, airpot = 2, device = 3, ptp = 5, connectPacket = 101,ptpComp = 6,showDevice = 7,
+        AI_report = 0, applewatch = 1, airpot = 2, device = 3, ptp = 5,ptpComp = 6,showDevice = 7, joinRoom = 8, disconnectPacket= 100 ,connectPacket = 101
     }
     class PTP_Packet
     {
@@ -70,6 +70,7 @@ namespace Server_Hue
         ConcurrentQueue<string> airpodData = new ConcurrentQueue<string>();
         ConcurrentQueue<string> deviceData = new ConcurrentQueue<string>();
         ConcurrentQueue<string> bodyTrackingData = new ConcurrentQueue<string>();
+        ConcurrentQueue<string> labelData = new ConcurrentQueue<string>();
         public ushort SessionID { get; set; }
         public SessionType SessionType { get; set; }
         public GameRoom Room { get; set; }
@@ -223,17 +224,34 @@ namespace Server_Hue
                     //만약에 PTP를 진행한다면..
                     // SIZE, ID, PACKET_PTP,PTPCOUNT,DOUBLE,DOUBLE,DOUBLE,DOUBLE
                     len += 2;
-                    SessionID = BitConverter.ToUInt16(buffer.Array, buffer.Offset + len);
+                    //SessionID = BitConverter.ToUInt16(buffer.Array, buffer.Offset + len);
                     Console.WriteLine($"Device is Connect Comp{SessionID}");
-                    if (SessionType == SessionType.Session_Labeler)
+                    if (SessionType == SessionType.Session_DataProvider)
                     {
+                        Program.Room.Connect(this);
                         Room = new GameRoom();
                         Room.Connect(this);
+                    }
+                    else if(SessionType == SessionType.Session_Labeler)
+                    {
+                        Program.Room.Connect(this);
                     }
                     break;
                 case ((int)packTypes.showDevice):
                     len += 2;
-                    Console.WriteLine($"return All Provider Data for {SessionID}");
+                    if (SessionType == SessionType.Session_Labeler)
+                    {
+                        Console.WriteLine($"return All Provider Data for {SessionID}");
+                        Program.Room.ConnectionCheck(this);
+                    }
+                    break;
+                case ((int)packTypes.joinRoom):
+                    len += 2;
+                    var provider = BitConverter.ToUInt16(buffer.Array, buffer.Offset + len);
+                    len += 2;
+                    var labeler = BitConverter.ToUInt16(buffer.Array, buffer.Offset + len);
+                    Console.WriteLine($"Labeler join the Provider room {SessionID}");
+                    Program.Room.Bind(provider, labeler);
                     break;
             }
         }
@@ -243,49 +261,26 @@ namespace Server_Hue
         public override void OnDisconnected(EndPoint endPoint)
         {
             SessionManager.instance.Remove(this);
-            Program.Room.Leave(this);
-            {
-                Console.WriteLine($"방탈출 {SessionID}");
-            }
             if (Room != null)
             {
                 Room.Leave(this);
                 Room = null;
-                Console.WriteLine($"방탈출 {SessionID}");
+                
+                Console.WriteLine($"프로바이더 방 탈출 {SessionID}");
             }
-           
+            Program.Room.Leave(this);
+            {
+                Console.WriteLine($"대기방 탈출 {SessionID}");
+            }
+            Request_Save();
             Console.WriteLine($" OnDisconnected {endPoint}");
         }
-        private void OnRequestSaveAndFeedBack(ushort packetID)
+        private void Request_Save()
         {
-            for (ushort i = 1; i < 5; i++)
-            {
-                fileIndex[i - 1]++;
-                switch (i)
-                {
-                    case 1:
-                        dataRecorder.PrintData(appleWatchData, packetID, i);
-                        appleWatchData.Clear();
-                        break;
-                    case 2:
-                        dataRecorder.PrintData(airpodData, packetID, i);
-                        airpodData.Clear();
-                        break;
-                    case 3:
-                        dataRecorder.PrintData(deviceData, packetID, i);
-                        deviceData.Clear();
-                        break;
-                    case 4:
-                        dataRecorder.PrintData(bodyTrackingData, packetID, i);
-                        bodyTrackingData.Clear();
-                        break;
-                }
-            }
-            //Program.Room.FeedBack(0, (ushort)101);
-            //Random random = new Random();
-            //ushort data = (ushort)random.Next(1, 5);
-            //Room.FeedBack(1, data);
-            //Room.FeedBack(2, data);
+            airpodData.Clear();
+            bodyTrackingData.Clear();
+            appleWatchData.Clear();
+            deviceData.Clear();
         }
     }
 

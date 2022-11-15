@@ -9,10 +9,33 @@ namespace Server_Hue
     class GameRoom
     {
         public Dictionary<int, GameSession> _sessions_DataProvider = new Dictionary<int, GameSession>();
-        Dictionary<int, GameSession> _sessions_Labeler = new Dictionary<int, GameSession>();
+        public Dictionary<int, GameSession> _sessions_Labeler = new Dictionary<int, GameSession>();
         Dictionary<int, GameSession> _sessions_Displayer = new Dictionary<int, GameSession>();
         object _lock = new object();
         static ushort playerID;
+        public GameSession Find(ushort id, SessionType sessiontype)
+        {
+            lock (_lock)
+            {
+                GameSession values;
+                switch (sessiontype)
+                {
+                    case SessionType.Session_DataProvider:
+                        _sessions_DataProvider.TryGetValue(id, out values);
+                        break;
+                    case SessionType.Session_Labeler:
+                        _sessions_Labeler.TryGetValue(id, out values);
+                        break;
+                    case SessionType.Session_Displayer:
+                        _sessions_Displayer.TryGetValue(id, out values);
+                        break;
+                    default:
+                        throw new ArgumentException();
+                        break;
+                }
+                return values;
+            }
+        }
 
         public void Enter(GameSession session)
         {
@@ -74,7 +97,6 @@ namespace Server_Hue
                     case SessionType.Session_Labeler:
                         _sessions_Labeler.TryAdd(session.SessionID, session);
                         Console.WriteLine($"The Session_Labeler is Enter : {session.SessionID}");
-                        ConnectionCheck(session);
                         break;
 
                     case SessionType.Session_Displayer:
@@ -84,30 +106,44 @@ namespace Server_Hue
                 }
             }
         }
-        public void Bind(GameRoom session, int id)
+        public void Bind(int provider_id,int labeler_id)
         {
             lock (_lock)
             {
-                Program.Room._sessions_DataProvider.TryGetValue(id, out var value);
+                Program.Room._sessions_DataProvider.TryGetValue(provider_id, out var value);
                 if (value != null)
                 {
-                    _sessions_Labeler.TryAdd(id, value);
+                    GameSession labeler = Program.Room.Find((ushort)labeler_id, SessionType.Session_Labeler);
+                    value.Room._sessions_Labeler.TryAdd(labeler.SessionID, labeler);
+                    Console.WriteLine($"Successfully Join the Room {value.SessionID},{value.SessionType},{labeler.SessionID},{labeler.SessionType}");
                 }
             }
         }
+
+        public void BroadCast(GameSession session)
+        {
+            foreach (var a in _sessions_Labeler.Values)
+            {
+                RemovePacket(a, session.SessionID);
+            }
+        }
+
         public void Leave(GameSession session)
         {
             lock (_lock)
             {
+       
                 switch (session.SessionType)
                 {
                     case SessionType.Session_Displayer:
+                     
                         _sessions_Displayer.Remove(session.SessionID);
                         break;
                     case SessionType.Session_Labeler:
                         _sessions_Labeler.Remove(session.SessionID);
                         break;
                     case SessionType.Session_DataProvider:
+                        BroadCast(session);
                         _sessions_DataProvider.Remove(session.SessionID);
                         break;
                     default:
@@ -125,6 +161,42 @@ namespace Server_Hue
                 {
                     ConnectionPacket(session, a.Key);
                 }
+            }
+        }
+
+        public void RemovePacket(GameSession session, int id)
+        {
+            bool success = true;
+            ushort size = 0;
+            ushort sendbyte = 0;
+            ArraySegment<byte> s = SendBufferHelper.Open(4096);
+            Connection_Packet packet = new Connection_Packet() { packetType = (ushort)packTypes.disconnectPacket, deviceId = (ushort)id };
+
+            //PacketSize short 만큼 추가
+            size += 2;
+            size += 2;
+            size += 2;
+            size += 2;
+            size += 2;
+
+            packet.size = size;
+
+            sendbyte += 2;
+            success &= BitConverter.TryWriteBytes(new Span<byte>(s.Array, s.Offset + sendbyte, s.Count - sendbyte), packet.size);
+            sendbyte += 2;
+            success &= BitConverter.TryWriteBytes(new Span<byte>(s.Array, s.Offset + sendbyte, s.Count - sendbyte), packet.packetId);
+            sendbyte += 2;
+            success &= BitConverter.TryWriteBytes(new Span<byte>(s.Array, s.Offset + sendbyte, s.Count - sendbyte), packet.packetType);
+            sendbyte += 2;
+            success &= BitConverter.TryWriteBytes(new Span<byte>(s.Array, s.Offset + sendbyte, s.Count - sendbyte), packet.deviceId);
+            sendbyte += 2;
+            success &= BitConverter.TryWriteBytes(new Span<byte>(s.Array, s.Offset + sendbyte, s.Count - sendbyte), packet.deviceId);
+            ArraySegment<byte> sendBuff = SendBufferHelper.Close(sendbyte);
+
+            if (success)
+            {
+                session.Send(sendBuff);
+                //  Console.WriteLine($"FeedBack Send, The SeesionID :{session.SessionID}");
             }
         }
 

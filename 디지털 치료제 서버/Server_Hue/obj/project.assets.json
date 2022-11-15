@@ -14,11 +14,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\epsel\\Downloads\\20220825\\Server_Hue\\Server_Hue.csproj",
+      "projectUniqueName": "C:\\Users\\epsel\\Desktop\\디지털 치료제 서버\\Server_Hue\\Server_Hue.csproj",
       "projectName": "Server_Hue",
-      "projectPath": "C:\\Users\\epsel\\Downloads\\20220825\\Server_Hue\\Server_Hue.csproj",
+      "projectPath": "C:\\Users\\epsel\\Desktop\\디지털 치료제 서버\\Server_Hue\\Server_Hue.csproj",
       "packagesPath": "C:\\Users\\epsel\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\epsel\\Downloads\\20220825\\Server_Hue\\obj\\",
+      "outputPath": "C:\\Users\\epsel\\Desktop\\디지털 치료제 서버\\Server_Hue\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

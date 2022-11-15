@@ -58,3 +58,18 @@ C:\Users\epsel\Downloads\20220825\Server_Hue\obj\Debug\net6.0\Server_Hue.dll
 C:\Users\epsel\Downloads\20220825\Server_Hue\obj\Debug\net6.0\ref\Server_Hue.dll
 C:\Users\epsel\Downloads\20220825\Server_Hue\obj\Debug\net6.0\Server_Hue.pdb
 C:\Users\epsel\Downloads\20220825\Server_Hue\obj\Debug\net6.0\Server_Hue.genruntimeconfig.cache
+C:\Users\epsel\Desktop\디지털 치료제 서버\Server_Hue\bin\Debug\net6.0\Server_Hue.exe
+C:\Users\epsel\Desktop\디지털 치료제 서버\Server_Hue\bin\Debug\net6.0\Server_Hue.deps.json
+C:\Users\epsel\Desktop\디지털 치료제 서버\Server_Hue\bin\Debug\net6.0\Server_Hue.runtimeconfig.json
+C:\Users\epsel\Desktop\디지털 치료제 서버\Server_Hue\bin\Debug\net6.0\Server_Hue.dll
+C:\Users\epsel\Desktop\디지털 치료제 서버\Server_Hue\bin\Debug\net6.0\ref\Server_Hue.dll
+C:\Users\epsel\Desktop\디지털 치료제 서버\Server_Hue\bin\Debug\net6.0\Server_Hue.pdb
+C:\Users\epsel\Desktop\디지털 치료제 서버\Server_Hue\obj\Debug\net6.0\Server_Hue.csproj.AssemblyReference.cache
+C:\Users\epsel\Desktop\디지털 치료제 서버\Server_Hue\obj\Debug\net6.0\Server_Hue.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\epsel\Desktop\디지털 치료제 서버\Server_Hue\obj\Debug\net6.0\Server_Hue.AssemblyInfoInputs.cache
+C:\Users\epsel\Desktop\디지털 치료제 서버\Server_Hue\obj\Debug\net6.0\Server_Hue.AssemblyInfo.cs
+C:\Users\epsel\Desktop\디지털 치료제 서버\Server_Hue\obj\Debug\net6.0\Server_Hue.csproj.CoreCompileInputs.cache
+C:\Users\epsel\Desktop\디지털 치료제 서버\Server_Hue\obj\Debug\net6.0\Server_Hue.dll
+C:\Users\epsel\Desktop\디지털 치료제 서버\Server_Hue\obj\Debug\net6.0\ref\Server_Hue.dll
+C:\Users\epsel\Desktop\디지털 치료제 서버\Server_Hue\obj\Debug\net6.0\Server_Hue.pdb
+C:\Users\epsel\Desktop\디지털 치료제 서버\Server_Hue\obj\Debug\net6.0\Server_Hue.genruntimeconfig.cache
