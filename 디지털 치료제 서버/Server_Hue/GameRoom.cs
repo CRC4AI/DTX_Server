@@ -197,6 +197,76 @@ namespace Server_Hue
             {
                 session.Send(sendBuff);
                 //  Console.WriteLine($"FeedBack Send, The SeesionID :{session.SessionID}");
+            }               
+        }
+        public void LabelTimeReqPacket(GameSession session, int id)
+        {
+            bool success = true;
+            ushort size = 0;
+            ushort sendbyte = 0;
+            ArraySegment<byte> s = SendBufferHelper.Open(4096);
+            LabelTimeRecv_Packet packet = new LabelTimeRecv_Packet() { packetType = (ushort)packTypes.labelTimeRequest, packetId = (ushort)id };
+
+            //PacketSize short 만큼 추가
+            size += 2;
+            size += 2;
+            size += 2;
+            size += 8;
+            size += 8;
+
+            packet.size = size;
+
+            sendbyte += 2;
+            success &= BitConverter.TryWriteBytes(new Span<byte>(s.Array, s.Offset + sendbyte, s.Count - sendbyte), packet.size);
+            sendbyte += 2;
+            success &= BitConverter.TryWriteBytes(new Span<byte>(s.Array, s.Offset + sendbyte, s.Count - sendbyte), packet.packetId);
+            sendbyte += 2;
+            success &= BitConverter.TryWriteBytes(new Span<byte>(s.Array, s.Offset + sendbyte, s.Count - sendbyte), packet.packetType);
+            sendbyte += 8;
+            success &= BitConverter.TryWriteBytes(new Span<byte>(s.Array, s.Offset + sendbyte, s.Count - sendbyte), packet.labelTime);
+            sendbyte += 8;
+            success &= BitConverter.TryWriteBytes(new Span<byte>(s.Array, s.Offset + sendbyte, s.Count - sendbyte), packet.labelTime);
+            ArraySegment<byte> sendBuff = SendBufferHelper.Close(sendbyte);
+
+            if (success)
+            {
+                session.Send(sendBuff);
+                //  Console.WriteLine($"FeedBack Send, The SeesionID :{session.SessionID}");
+            }
+        }
+        public void LabelTimeSendPacket(GameSession session, int id,double time)
+        {
+            bool success = true;
+            ushort size = 0;
+            ushort sendbyte = 0;
+            ArraySegment<byte> s = SendBufferHelper.Open(4096);
+            LabelTimeRecv_Packet packet = new LabelTimeRecv_Packet() { packetType = (ushort)packTypes.labelTimeSetting, packetId = (ushort)id ,labelTime = time};
+
+            //PacketSize short 만큼 추가
+            size += 2;
+            size += 2;
+            size += 2;
+            size += 8;
+            size += 8;
+
+            packet.size = size;
+
+            sendbyte += 2;
+            success &= BitConverter.TryWriteBytes(new Span<byte>(s.Array, s.Offset + sendbyte, s.Count - sendbyte), packet.size);
+            sendbyte += 2;
+            success &= BitConverter.TryWriteBytes(new Span<byte>(s.Array, s.Offset + sendbyte, s.Count - sendbyte), packet.packetId);
+            sendbyte += 2;
+            success &= BitConverter.TryWriteBytes(new Span<byte>(s.Array, s.Offset + sendbyte, s.Count - sendbyte), packet.packetType);
+            sendbyte += 8;
+            success &= BitConverter.TryWriteBytes(new Span<byte>(s.Array, s.Offset + sendbyte, s.Count - sendbyte), packet.labelTime);
+            sendbyte += 8;
+            success &= BitConverter.TryWriteBytes(new Span<byte>(s.Array, s.Offset + sendbyte, s.Count - sendbyte), packet.labelTime);
+            ArraySegment<byte> sendBuff = SendBufferHelper.Close(sendbyte);
+
+            if (success)
+            {
+                session.Send(sendBuff);
+                //  Console.WriteLine($"FeedBack Send, The SeesionID :{session.SessionID}");
             }
         }
 

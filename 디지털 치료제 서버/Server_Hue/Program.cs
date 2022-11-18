@@ -12,7 +12,7 @@ namespace Server_Hue
 {
     enum packTypes
     {
-        AI_report = 0, applewatch = 1, airpot = 2, device = 3, ptp = 5,ptpComp = 6,showDevice = 7, joinRoom = 8, disconnectPacket= 100 ,connectPacket = 101
+        AI_report = 0, applewatch = 1, airpot = 2, device = 3, ptp = 5,ptpComp = 6,showDevice = 7, joinRoom = 8,labelTimeRequest = 9, labelTimeSetting = 10,labelingData =11, FileSave = 12, disconnectPacket= 100 ,connectPacket = 101
     }
     class PTP_Packet
     {
@@ -49,6 +49,14 @@ namespace Server_Hue
         public ushort deviceId;
     }
 
+    class LabelTimeRecv_Packet
+    {
+        public ushort size;
+        public ushort packetId;
+        public ushort packetType;
+        public double labelTime;
+    }
+
 
     class FeedBack_Packet
     {
@@ -69,7 +77,7 @@ namespace Server_Hue
         ConcurrentQueue<string> appleWatchData = new ConcurrentQueue<string>();
         ConcurrentQueue<string> airpodData = new ConcurrentQueue<string>();
         ConcurrentQueue<string> deviceData = new ConcurrentQueue<string>();
-        ConcurrentQueue<string> bodyTrackingData = new ConcurrentQueue<string>();
+        public ConcurrentQueue<string> bodyTrackingData = new ConcurrentQueue<string>();
         ConcurrentQueue<string> labelData = new ConcurrentQueue<string>();
         public ushort SessionID { get; set; }
         public SessionType SessionType { get; set; }
@@ -253,6 +261,41 @@ namespace Server_Hue
                     Console.WriteLine($"Labeler join the Provider room {SessionID}");
                     Program.Room.Bind(provider, labeler);
                     break;
+                case ((int)packTypes.labelTimeRequest):
+                    len += 2;
+                    var provider_x = BitConverter.ToUInt16(buffer.Array, buffer.Offset + len);
+                    len += 2;
+                    var labeler_x = BitConverter.ToUInt16(buffer.Array, buffer.Offset + len);
+                    Console.WriteLine($"Labeler Want Provider time {SessionID}");
+                    var session=Program.Room.Find(provider_x,SessionType.Session_DataProvider);
+                    Program.Room.LabelTimeReqPacket(session, session.SessionID);
+                    session.bodyTrackingData.Enqueue("{label}");
+                    break;
+                case ((int)packTypes.labelTimeSetting):
+                    len += 2;
+                    len += 2;
+                    var provider_y = BitConverter.ToUInt16(buffer.Array, buffer.Offset + len);
+                    len += 2;
+                    var labeler_y = BitConverter.ToUInt16(buffer.Array, buffer.Offset + len);
+
+                    double labelTime_y = BitConverter.ToDouble(buffer.Array, buffer.Offset + len);
+                    Console.WriteLine($"Labeler Get Provider time {SessionID},{ labelTime_y}");
+                    var session_y = Program.Room.Find(2, SessionType.Session_Labeler);
+                    Program.Room.LabelTimeSendPacket(session_y, session_y.SessionID, labelTime_y);
+                    session_y.bodyTrackingData.Enqueue("{label}");
+                    break;
+                case ((int)packTypes.labelingData):
+                    len += 2;
+                    var chatLen = BitConverter.ToUInt16(buffer.Array, buffer.Offset + len);
+                    len += 2;
+                    len += 2;
+                    string labelingData = Encoding.Unicode.GetString(buffer.Array,buffer.Offset+len,chatLen-2);
+                    Console.WriteLine(labelingData);
+                    break;
+                case ((int)packTypes.FileSave):
+                    
+                    break;
+
             }
         }
         public override void OnSend(int numOfBytes)

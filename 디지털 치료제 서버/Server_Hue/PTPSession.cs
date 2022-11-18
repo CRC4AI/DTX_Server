@@ -12,7 +12,6 @@ namespace Server_Hue
     
     class PTPSession
     {
-
         public double CalculatePTP(GameSession session, ConcurrentQueue<double[]> data)
         {
             ConcurrentBag<double> time = new ConcurrentBag<double>();
